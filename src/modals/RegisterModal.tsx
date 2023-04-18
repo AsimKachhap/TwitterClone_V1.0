@@ -4,33 +4,35 @@ import useLoginModal from "@/hooks/useLoginModal";
 import useRegisterModal from "@/hooks/useRegisterModal";
 import { FunctionComponent, useCallback, useState } from "react";
 
-interface LoginModalProps {}
+interface RegisterModalProps {}
 
-const LoginModal: FunctionComponent<LoginModalProps> = () => {
+const RegisterModal: FunctionComponent<RegisterModalProps> = () => {
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const onToggle = useCallback(() => {
     if (isLoading) return;
-    loginModal.onClose();
-    registerModal.onOpen();
+    registerModal.onClose();
+    loginModal.onOpen();
   }, [isLoading, registerModal, loginModal]);
 
   const onSubmit = useCallback(async () => {
     try {
       setIsLoading(true);
-      // LOGIN LOGIC
-      loginModal.onClose();
+      // LOGIN AND REGISTER LOGIC
+      registerModal.onClose();
     } catch (error) {
       console.log(error);
     } finally {
       setIsLoading(false);
     }
-  }, [loginModal]);
+  }, [registerModal]);
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
@@ -38,6 +40,20 @@ const LoginModal: FunctionComponent<LoginModalProps> = () => {
         placeholder="Email"
         onChange={(e) => setEmail(e.target.value)}
         value={email}
+        disabled={isLoading}
+      />
+
+      <Input
+        placeholder="Name"
+        onChange={(e) => setName(e.target.value)}
+        value={name}
+        disabled={isLoading}
+      />
+
+      <Input
+        placeholder="User Name"
+        onChange={(e) => setUserName(e.target.value)}
+        value={userName}
         disabled={isLoading}
       />
 
@@ -53,12 +69,12 @@ const LoginModal: FunctionComponent<LoginModalProps> = () => {
   const footerContent = (
     <div className="text-neutral-400 text-center mt-4">
       <p>
-        First time using Twitter?
+        Already have an Account?
         <span
           onClick={onToggle}
           className="text-white cursor-pointer hover:underline"
         >
-          Create an account
+          Sign in
         </span>
       </p>
     </div>
@@ -67,10 +83,10 @@ const LoginModal: FunctionComponent<LoginModalProps> = () => {
   return (
     <Modal
       disabled={isLoading}
-      isOpen={loginModal.isOpen}
-      title="Login"
-      actionLabel="Sign In"
-      onClose={loginModal.onClose}
+      isOpen={registerModal.isOpen}
+      title="Create an Account"
+      actionLabel="Register"
+      onClose={registerModal.onClose}
       onSubmit={onSubmit}
       body={bodyContent}
       footer={footerContent}
@@ -78,4 +94,4 @@ const LoginModal: FunctionComponent<LoginModalProps> = () => {
   );
 };
 
-export default LoginModal;
+export default RegisterModal;
